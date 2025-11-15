@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado - {{ nome }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-200 min-h-screen p-4 md:p-8">
+    <div class="max-w-6xl mx-auto bg-gray-800/60 backdrop-blur-md p-6 md:p-8 rounded-2xl shadow-xl border border-gray-700">
+
+        <h1 class="text-2xl md:text-3xl font-bold text-blue-400 mb-6 text-center">
+            Resultado da busca: {{ nome }}
+        </h1>
+
+        {% if jogo %}
+
+        <!-- Cabeçalho com imagem e informações principais -->
+        <div class="flex flex-col md:flex-row gap-6 mb-8">
+            <div class="flex justify-center md:justify-start">
+                <img src="{{ jogo.imagem }}" alt="Imagem do jogo" 
+                     class="rounded-lg shadow-lg w-48 md:w-72 h-auto">
+            </div>
+            
+            <div class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Preço e Status -->
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-lg font-bold text-green-400">{{ jogo.preco }}</div>
+                        <div class="text-sm text-gray-300">{{ jogo.status }}</div>
+                    </div>
+                    
+                    <!-- Classificação -->
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-lg font-bold text-yellow-400">{{ jogo.classificacao }}</div>
+                        <div class="text-sm text-gray-300">{{ jogo.avaliacoes }} avaliações</div>
+                    </div>
+                    
+                    <!-- Top Seller -->
+                    {% if jogo.top_seller == "Sim" %}
+                    <div class="bg-yellow-600/20 p-4 rounded-lg border border-yellow-500">
+                        <div class="text-lg font-bold text-yellow-400">🏆 Top Seller</div>
+                        <div class="text-sm text-yellow-300">Jogo mais vendido</div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Dados de Lançamento -->
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-sm text-gray-300">Lançamento</div>
+                        <div class="font-semibold">{{ jogo.data }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações Básicas -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-blue-400 mb-4 border-b border-gray-700 pb-2">
+                Informações do Jogo
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-800/50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-400">Desenvolvedor</div>
+                    <div class="font-semibold">{{ jogo.desenvolvedor }}</div>
+                </div>
+                <div class="bg-gray-800/50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-400">Publicadora</div>
+                    <div class="font-semibold">{{ jogo.publicadora }}</div>
+                </div>
+                <div class="bg-gray-800/50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-400">Gênero</div>
+                    <div class="font-semibold">{{ jogo.genero }}</div>
+                </div>
+                <div class="bg-gray-800/50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-400">Classificação Etária</div>
+                    <div class="font-semibold">{{ jogo.classificacao_etaria }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descrição -->
+        {% if jogo.descricao != "N/A" %}
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-blue-400 mb-4 border-b border-gray-700 pb-2">
+                Descrição
+            </h2>
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+                <p class="text-justify leading-relaxed">{{ jogo.descricao }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recursos e Características -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-blue-400 mb-4 border-b border-gray-700 pb-2">
+                Recursos
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- Multiplayer -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.tem_multijogador %}🎮{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Multiplayer</div>
+                </div>
+                
+                <!-- Co-op -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.tem_coop %}👥{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Co-op</div>
+                </div>
+                
+                <!-- Mods -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.tem_mods_suportados %}🔧{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Mods</div>
+                </div>
+                
+                <!-- VR -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.vr_suportado %}🥽{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">VR</div>
+                </div>
+                
+                <!-- Cloud Saves -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.tem_cloud_saves %}☁️{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Cloud Saves</div>
+                </div>
+                
+                <!-- Controller -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.suporte_controller %}🎯{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Controller</div>
+                </div>
+                
+                <!-- Cartas Steam -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">
+                        {% if jogo.tem_cartas_steam %}🃏{% else %}❌{% endif %}
+                    </div>
+                    <div class="text-xs font-semibold">Cartas Steam</div>
+                </div>
+                
+                <!-- Achievements -->
+                <div class="bg-gray-800/50 p-3 rounded-lg text-center">
+                    <div class="text-2xl mb-1">🏆</div>
+                    <div class="text-xs font-semibold">{{ jogo.quantidade_achievements }} Conquistas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dados Técnicos e Conteúdo -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Conteúdo Adicional -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-lg font-bold text-blue-400 mb-3">Conteúdo</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">DLCs Disponíveis:</span>
+                        <span class="font-semibold">{{ jogo.quantidade_dlcs }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Atualizações Recentes:</span>
+                        <span class="font-semibold">{{ "Sim" if jogo.atualizacoes_recentes else "Não" }}</span>
+                    </div>
+                    {% if jogo.tamanho_download != "N/A" %}
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Tamanho Download:</span>
+                        <span class="font-semibold">{{ jogo.tamanho_download }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Idiomas e Tags -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-lg font-bold text-blue-400 mb-3">Localização & Categorias</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="text-sm text-gray-400 mb-1">Idiomas Suportados:</div>
+                        <div class="text-sm">{{ jogo.idiomas }}</div>
+                    </div>
+                    {% if jogo.tags != "N/A" %}
+                    <div>
+                        <div class="text-sm text-gray-400 mb-1">Tags Populares:</div>
+                        <div class="flex flex-wrap gap-1">
+                            {% for tag in jogo.tags.split(", ") %}
+                            <span class="bg-gray-700 px-2 py-1 rounded text-xs">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Concorrentes Diretos -->
+        {% if jogo.concorrentes_diretos and jogo.concorrentes_diretos|length > 0 %}
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-blue-400 mb-4 border-b border-gray-700 pb-2">
+                Jogos Similares
+            </h2>
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+                <div class="flex flex-wrap gap-2">
+                    {% for concorrente in jogo.concorrentes_diretos %}
+                    <span class="bg-gray-700/70 px-3 py-2 rounded-lg text-sm border border-gray-600">
+                        {{ concorrente }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Análise de Mercado -->
+        <div class="bg-gray-800/30 p-4 rounded-lg border border-gray-600">
+            <h3 class="text-lg font-bold text-green-400 mb-3 text-center">
+                Análise de Mercado
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-bold text-blue-400">{{ jogo.faixa_preco }}</div>
+                    <div class="text-xs text-gray-400">Faixa de Preço</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-yellow-400">{{ jogo.top_seller }}</div>
+                    <div class="text-xs text-gray-400">Top Seller</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-purple-400">{{ jogo.quantidade_dlcs }}</div>
+                    <div class="text-xs text-gray-400">Conteúdo Extra</div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+            <div class="text-center py-12">
+                <div class="text-6xl mb-4">😕</div>
+                <p class="text-red-400 text-lg font-medium mb-4">
+                    Não foi possível encontrar o jogo.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Verifique o nome do jogo e tente novamente.
+                </p>
+            </div>
+        {% endif %}
+
+        <!-- Botão Voltar -->
+        <div class="mt-8 text-center">
+            <a href="/" 
+               class="inline-flex items-center px-6 py-3 rounded-lg bg-blue-500 hover:bg-blue-400 text-black font-semibold transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+               ← Voltar para Busca
+            </a>
+        </div>
+
+    </div>
+</body>
+</html>
