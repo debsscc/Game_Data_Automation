@@ -28,19 +28,30 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y chromium-browser chromium-chromedriver
     
-    - name: Create templates directory
-      run: |
-        mkdir -p templates
-        cp index.html templates/
-        cp resultado.html templates/
-    
     - name: Test application
       run: |
         python -c "
-        from game_finder_optimized import buscar_jogo_steam
-        print('✅ Scraper importado com sucesso!')
-        from app import app
-        print('✅ Flask app importado com sucesso!')
+        try:
+            from game_finder import buscar_jogo_steam  # ← MUDOU AQUI
+            print('Scraper importado com sucesso!')
+        except Exception as e:
+            print(f'Erro ao importar scraper: {e}')
+            import traceback
+            traceback.print_exc()
+        
+        try:
+            from app import app
+            print('Flask app importado com sucesso!')
+        except Exception as e:
+            print(f'Erro ao importar Flask app: {e}')
+            import traceback
+            traceback.print_exc()
+        
+        # Lista arquivos para debug
+        import os
+        print('Arquivos no diretório:')
+        for file in os.listdir('.'):
+            print(f'  - {file}')
         "
     
     - name: Deploy to GitHub Pages
