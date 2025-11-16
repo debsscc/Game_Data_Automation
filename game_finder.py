@@ -182,17 +182,23 @@ def buscar_jogo_steam(nome_jogo):
     driver = None
     
     try:
+        print("DEBUG [GAME_FINDER]: Tentando iniciar ChromeDriver...")
         service = Service(CHROMEDRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=options)
+        print("DEBUG [GAME_FINDER]: ChromeDriver iniciado com sucesso")
+
     except Exception as e:
-        print(f"[scraper][aviso] Erro com ChromeDriver primário: {e}")
-        try:
-            driver = webdriver.Chrome(options=options)
-        except Exception as e2:
-            print(f"[scraper][erro] Falha ao iniciar ChromeDriver: {e2}")
-            return None
+            print(f"DEBUG [GAME_FINDER]: Erro ao iniciar ChromeDriver: {e}")
+            try:
+                print("DEBUG [GAME_FINDER]: Tentando fallback sem Service...")
+                driver = webdriver.Chrome(options=options)
+                print("DEBUG [GAME_FINDER]: ChromeDriver iniciado sem Service")
+            except Exception as e2:
+                print(f"DEBUG [GAME_FINDER]: Falha total ao iniciar ChromeDriver: {e2}")
+                return None
 
     if not driver:
+        print("DEBUG [GAME_FINDER]: Driver não inicializado")
         return None
 
     driver.set_page_load_timeout(15)
@@ -202,6 +208,8 @@ def buscar_jogo_steam(nome_jogo):
     try:
         print("[scraper] Acessando Steam...")
         driver.get("https://store.steampowered.com/")
+        print("DEBUG [GAME_FINDER]: Steam carregado")
+
         
         try:
             search_box = WebDriverWait(driver, SHORT_WAIT).until(
@@ -342,5 +350,7 @@ def buscar_jogo_steam(nome_jogo):
         if driver:
             try:
                 driver.quit()
+                print("DEBUG [GAME_FINDER]: Driver fechado")
+
             except Exception:
                 pass
