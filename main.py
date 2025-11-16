@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    print("DEBUG: Pagina index acessada")
     return render_template('index.html')
 
 @app.route('/buscar', methods=['POST'])
@@ -31,7 +30,6 @@ def buscar():
         
         if resultado:
             print(f"DEBUG: Busca bem-sucedida! Keys no resultado: {list(resultado.keys()) if resultado else 'N/A'}")
-            print(f"DEBUG: Preco encontrado: {resultado.get('preco', 'N/A')}")
             print(f"DEBUG: Redirecionando para resultado.html")
             return render_template('resultado.html', nome=nome_jogo, jogo=resultado)
         else:
@@ -41,7 +39,6 @@ def buscar():
     
     except Exception as e:
         print(f"DEBUG: ERRO durante a busca: {str(e)}")
-        print(f"DEBUG: Traceback completo:")
         traceback.print_exc()
         return render_template('index.html', 
                              erro=f"Erro ao buscar jogo: {str(e)}")
