@@ -1,4 +1,3 @@
-# game_finder_optimized.py
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -10,24 +9,24 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 import logging
 import re
 import os
-from webdriver_manager.chrome import ChromeDriverManager
 
 logging.getLogger('selenium').setLevel(logging.WARNING)
 
 def get_chromedriver_path():
-    """Detecta o ambiente e retorna o path correto do ChromeDriver"""
-    # No GitHub Actions
-    if os.path.exists('/usr/bin/chromedriver'):
+    if os.path.exists('/usr/bin/google-chrome'):
         return '/usr/bin/chromedriver'
-    # No Windows local 
-    elif os.path.exists(r"C:\Users\dbndy\Documents\Graduação\SENAC\6 Semestre\Automação e Programabilidade em Redes\game_finder_automation\chromedriver.exe"):
-        return r"C:\Users\dbndy\Documents\Graduação\SENAC\6 Semestre\Automação e Programabilidade em Redes\game_finder_automation\chromedriver.exe"
-    # Fallback - webdriver-manager (para outros ambientes)
-    else:
-        try:
-            return ChromeDriverManager().install()
-        except Exception:
-            return 'chromedriver'
+    
+    # No Windows local
+    env_path = os.environ.get('CHROMEDRIVER_PATH')
+    if env_path and os.path.exists(env_path):
+        return env_path
+    
+    # webdriver-manager (local development)
+    try:
+        from webdriver_manager.chrome import ChromeDriverManager
+        return ChromeDriverManager().install()
+    except Exception:
+        return 'chromedriver'
 
 CHROMEDRIVER_PATH = get_chromedriver_path()
 
@@ -61,6 +60,7 @@ def _get_attr_safe(driver, by, selector, attr="src", wait=SHORT_WAIT):
     return "N/A"
 
 def _get_extra_market_data(driver, info_jogo):
+    """Coleta dados extras para análise de mercado"""
     market_data = {}
     
     # 1. Dados de Performance Comercial
@@ -152,34 +152,24 @@ def _get_extra_market_data(driver, info_jogo):
     return market_data
 
 def _setup_driver_options():
-    """Configura as opções do Chrome para melhor performance"""
     options = Options()
-    
-    # Otimizações para headless
+        
+    # Configurações para ambiente de produção
     options.add_argument("--headless=new")
-    options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
     options.add_argument("--disable-extensions")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--mute-audio")
-    options.add_argument("--autoplay-policy=no-user-gesture-required")
+    options.add_argument("--remote-debugging-port=9222")
     
-    # Performance
     options.add_argument("--disable-background-timer-throttling")
     options.add_argument("--disable-renderer-backgrounding")
     options.add_argument("--disable-backgrounding-occluded-windows")
     
-    options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])
-    options.add_experimental_option("useAutomationExtension", False)
-    options.page_load_strategy = "eager"  # Não espera carregamento completo
-
     prefs = {
-        "profile.managed_default_content_settings.images": 2,  # Bloqueia imagens
+        "profile.managed_default_content_settings.images": 2,
         "profile.default_content_setting_values.notifications": 2,
-        "profile.default_content_setting_values.media_stream": 2,
         "profile.default_content_setting_values.geolocation": 2,
-        "profile.default_content_setting_values.cookies": 2,
     }
     options.add_experimental_option("prefs", prefs)
     
@@ -194,8 +184,8 @@ def buscar_jogo_steam(nome_jogo):
     print(f"[scraper] Buscando '{nome_jogo}' na Steam...")
 
     options = _setup_driver_options()
-    
     driver = None
+    
     try:
         service = Service(CHROMEDRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=options)
@@ -210,8 +200,8 @@ def buscar_jogo_steam(nome_jogo):
     if not driver:
         return None
 
-    driver.set_page_load_timeout(10)
-    driver.set_script_timeout(10)
+    driver.set_page_load_timeout(15)
+    driver.set_script_timeout(15)
     info_jogo = {}
 
     try:

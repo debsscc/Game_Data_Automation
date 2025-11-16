@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 from game_finder import buscar_jogo_steam
 import os
 
