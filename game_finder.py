@@ -13,7 +13,7 @@ import os
 logging.getLogger('selenium').setLevel(logging.WARNING)
 
 def get_chromedriver_path():
-    if os.path.exists('/usr/bin/google-chrome'):
+    if os.path.exists('/usr/bin/chromedriver'):
         return '/usr/bin/chromedriver'
     
     # No Windows local
@@ -176,11 +176,6 @@ def _setup_driver_options():
     return options
 
 def buscar_jogo_steam(nome_jogo):
-    """
-    Busca informações de um jogo na Steam e retorna um dict com campos:
-    preco, status, classificacao, avaliacoes, data, desenvolvedor, publicadora,
-    descricao, tags, genero, idiomas, imagem + dados de mercado
-    """
     print(f"[scraper] Buscando '{nome_jogo}' na Steam...")
 
     options = _setup_driver_options()
