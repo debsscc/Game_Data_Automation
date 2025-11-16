@@ -10,11 +10,12 @@ Digite o nome de um jogo e o programa mostra:
 - Gêneros, tags e idiomas
 - Descrição do jogo
 
-## ⚙️ Tecnologias
+## Tecnologias
 - Python
 - Selenium WebDriver
 - ChromeDriver
 - Flask
+- Railway
 
-## 🎯 Desenvolvido para
+## Desenvolvido para
 Projeto da disciplina **Automação e Programabilidade em Redes** — Demonstração de automação web com Python.
